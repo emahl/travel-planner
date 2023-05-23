@@ -1,9 +1,4 @@
-﻿using AutoFixture;
-using Domain.Entities;
-using Domain.Enums;
-using Shouldly;
-
-namespace Domain.Tests;
+﻿namespace Domain.Tests;
 
 public class TravelPlanTests
 {
