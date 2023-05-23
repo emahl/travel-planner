@@ -1,0 +1,29 @@
+﻿@using Domain.Entities;
+@using Domain.Enums;
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Create" Class="mr-3 mb-n1" />
+            @DialogTitle
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        @if (!TravelPlan.IsNew) {
+            <MudTextField Value="@TravelPlan.Id.ToString()" Label="Travel Plan ID" ReadOnly="true" />
+        }
+        <MudTextField Value="@TravelPlan.Name" Label="Name" ValueChanged="(string name) => TravelPlan.ChangeName(name)" />
+        <MudTextField Value="@TravelPlan.Description" Label="Description" ValueChanged="(string description) => TravelPlan.ChangeDescription(description)" />
+        <MudNumericField Value="@TravelPlan.Budget" Label="Budget" ValueChanged="(int? budget) => TravelPlan.ChangeBudget(budget)" />
+        <MudSelect Value="@TravelPlan.Type" Label="Type" ValueChanged="(TravelPlanType type) => TravelPlan.ChangeType(type)">
+            @foreach (TravelPlanType item in Enum.GetValues(typeof(TravelPlanType)))
+            {
+                <MudSelectItem Value="@item">@item</MudSelectItem>
+            }
+        </MudSelect>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="CreateOrUpdate">Save</MudButton>
+    </DialogActions>
+</MudDialog>

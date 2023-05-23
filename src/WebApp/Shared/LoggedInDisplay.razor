@@ -1,0 +1,12 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <form style="margin: 10px 10px 0 10px;" method="post" action="logout">
+            <p style="display: inline-block; margin-right: 5px; color: white;">
+                <MudIcon style="vertical-align: middle;" Icon="@Icons.Material.Filled.Person" /> @context.User.Identity?.Name
+            </p>
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Secondary" Size="Size.Small">
+                Log out
+            </MudButton>
+        </form>
+    </Authorized>
+</AuthorizeView>

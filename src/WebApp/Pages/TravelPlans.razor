@@ -1,0 +1,33 @@
+﻿@page "/travel-plans"
+@using Application.Queries;
+@using Domain.Entities;
+@using MediatR;
+
+<PageTitle>Travel plans</PageTitle>
+
+<div style="margin-bottom: 10px;">
+    <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="@((_) => CreateTravelPlan())">Create new</MudButton>
+</div>
+<MudTable Items="@_travelPlans" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Description</MudTh>
+        <MudTh>Type</MudTh>
+        <MudTh>Budget</MudTh>
+        <MudTh>Created by</MudTh>
+        <MudTh>Updated by</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Description">@context.Description</MudTd>
+        <MudTd DataLabel="Type">@context.Type</MudTd>
+        <MudTd DataLabel="Budget">@context.Budget</MudTd>
+        <MudTd><p title="@context.CreatedDate">@context.CreatedBy</p></MudTd>
+        <MudTd><p title="@context.UpdatedDate">@context.UpdatedBy</p></MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" OnClick="@((_) => UpdateTravelPlan(context))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" OnClick="@((_) => DeleteTravelPlan(context.Id, context.Name))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
