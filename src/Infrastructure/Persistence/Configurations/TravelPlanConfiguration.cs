@@ -13,14 +13,7 @@ public class TravelPlanConfiguration : IEntityTypeConfiguration<TravelPlan>
 
         builder.Property(tp => tp.Type).HasConversion<int>();
 
-        builder
-            .HasMany(tp => tp.ThingsToDo)
-            .WithOne()
-            .IsRequired();
-
-        builder.Navigation(tp => tp.TravelFrom).AutoInclude();
-        
-        builder.Navigation(tp => tp.TravelTo).AutoInclude();
-        builder.Navigation(tp => tp.ThingsToDo).AutoInclude();
+        builder.OwnsOne(tp => tp.TravelHome);
+        builder.OwnsOne(tp => tp.TravelTo);
     }
 }

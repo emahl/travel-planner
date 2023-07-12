@@ -1,0 +1,14 @@
+﻿@if (NonCompletedTravelPlans.Count == 0)
+{
+    <MudText>No upcoming travel plans created</MudText>
+}
+else
+{
+    <MudTimeline Style="margin-bottom: 20px">
+        @for (var i = 0; i < NonCompletedTravelPlans.Count; i++)
+        {
+            var travelPlan = NonCompletedTravelPlans[i];
+            <TravelPlanTimelineItem TravelPlan="@travelPlan" Index="@i" OnEditTravelPlan="@OnEditTravelPlan" />
+        }
+    </MudTimeline>
+}

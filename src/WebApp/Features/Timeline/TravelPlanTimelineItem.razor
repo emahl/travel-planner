@@ -1,0 +1,23 @@
+﻿<MudTimelineItem Color="@ColorBasedOnIndex" Size="Size.Large" TimelineAlign="TimelineAlign.End">
+    <ItemDot>
+        <div @onmouseenter="@OnMouseEnter" @onmouseleave="@OnMouseLeave">
+            @if (!_isHovering)
+            {
+                <MudIcon Size="Size.Large" Icon="@TravelTypeIcon" />            
+            }
+            else
+            {
+                <MudIconButton Size="Size.Medium" Color="@Color.Inherit" Icon="@Icons.Material.Filled.Edit" OnClick="OnClickEdit" />
+            }
+        </div>
+    </ItemDot>
+    <ItemOpposite>
+        <MudText Color="@ColorBasedOnIndex" Typo="Typo.subtitle1">@TravelPlan.TravelDateStart</MudText>
+    </ItemOpposite>
+    <ItemContent>
+        <MudText Color="@ColorBasedOnIndex" Typo="Typo.subtitle1" GutterBottom="true">@TravelPlan.Name</MudText>
+        <MudText Typo="Typo.subtitle2">@TravelPlan.Description</MudText>
+        <MudText Typo="Typo.body2" Style="color: gray">@TravelPlan.TravelTo.Title</MudText>
+        <MudText Typo="Typo.body2" Style="color: gray">@TravelPlan.TravelHome.Title</MudText>
+    </ItemContent>
+</MudTimelineItem>

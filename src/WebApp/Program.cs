@@ -6,11 +6,9 @@ using Application;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options => options.RootDirectory = "/Features");
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();
-
-builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);

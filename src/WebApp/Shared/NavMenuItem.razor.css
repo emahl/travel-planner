@@ -1,0 +1,15 @@
+﻿::deep .mud-nav-link {
+	margin: 0 3px;
+	padding: 8px;
+}
+
+::deep .mud-nav-link .mud-nav-link-text {
+	margin-left: 0;
+}
+
+.menu-item-icon {
+	display: inline-block;
+	margin-right: 3px;
+	position: relative;
+	top: 4px;
+}

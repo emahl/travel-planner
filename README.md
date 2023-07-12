@@ -2,6 +2,5 @@
 * Clean architecture
 * Blazor Server
 * MudBlazor
-* CQRS
-* MediatR
+* CQRS (MediatR)
 * Google Auth

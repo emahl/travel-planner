@@ -1,7 +1,4 @@
-﻿@using Domain.Entities;
-@using Domain.Enums;
-
-<MudDialog>
+﻿<MudDialog Style="width: 500px;">
     <TitleContent>
         <MudText Typo="Typo.h6">
             <MudIcon Icon="@Icons.Material.Filled.Create" Class="mr-3 mb-n1" />
@@ -9,10 +6,7 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        @if (!TravelPlan.IsNew) {
-            <MudTextField Value="@TravelPlan.Id.ToString()" Label="Travel Plan ID" ReadOnly="true" />
-        }
-        <MudTextField Value="@TravelPlan.Name" Label="Name" ValueChanged="(string name) => TravelPlan.ChangeName(name)" />
+        <MudTextField Required="true" Value="@TravelPlan.Name" Label="Name" ValueChanged="(string name) => TravelPlan.ChangeName(name)" />
         <MudTextField Value="@TravelPlan.Description" Label="Description" ValueChanged="(string description) => TravelPlan.ChangeDescription(description)" />
         <MudNumericField Value="@TravelPlan.Budget" Label="Budget" ValueChanged="(int? budget) => TravelPlan.ChangeBudget(budget)" />
         <MudSelect Value="@TravelPlan.Type" Label="Type" ValueChanged="(TravelPlanType type) => TravelPlan.ChangeType(type)">
@@ -21,9 +15,19 @@
                 <MudSelectItem Value="@item">@item</MudSelectItem>
             }
         </MudSelect>
+        <div style="margin-top: 10px;">
+            <MudExpansionPanels>
+                <MudExpansionPanel Text="@TravelToPanelTitle" MaxHeight="400">
+                    <TravelInputForm Travel="@TravelPlan.TravelTo" />
+                </MudExpansionPanel>
+                <MudExpansionPanel Text="@TravelHomePanelTitle" MaxHeight="400">
+                    <TravelInputForm Travel="@TravelPlan.TravelHome" />
+                </MudExpansionPanel>
+            </MudExpansionPanels>
+        </div>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Success" OnClick="CreateOrUpdate">Save</MudButton>
+        <MudButton Disabled="IsSaveDisabled" Color="Color.Success" OnClick="CreateOrUpdate">Save</MudButton>
     </DialogActions>
 </MudDialog>

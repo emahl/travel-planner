@@ -1,12 +1,22 @@
 ﻿<AuthorizeView>
     <Authorized>
-        <form style="margin: 10px 10px 0 10px;" method="post" action="logout">
-            <p style="display: inline-block; margin-right: 5px; color: white;">
-                <MudIcon style="vertical-align: middle;" Icon="@Icons.Material.Filled.Person" /> @context.User.Identity?.Name
-            </p>
-            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Secondary" Size="Size.Small">
-                Log out
-            </MudButton>
+        <form method="post" action="logout">
+            <MudContainer Style="text-align: right; padding-right: 0">
+                <MudHidden Breakpoint="Breakpoint.Xs">
+                    <div>
+                        <MudButton StartIcon="@Icons.Material.Filled.Logout" ButtonType="ButtonType.Submit" Variant="Variant.Text" Color="Color.Error" Size="Size.Small">
+                            Log out
+                        </MudButton>
+                    </div>
+                    <div style="margin-right: 5px; color: white;">
+                        <MudIcon style="vertical-align: middle;" Icon="@Icons.Material.Filled.Person" />
+                        @context.User.Identity?.Name
+                    </div>
+                </MudHidden>
+                <MudHidden Breakpoint="Breakpoint.SmAndUp">
+                    <MudIconButton ButtonType="ButtonType.Submit" Color="Color.Error" Icon="@Icons.Material.Filled.Logout" />
+                </MudHidden>
+            </MudContainer>
         </form>
     </Authorized>
 </AuthorizeView>

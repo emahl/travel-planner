@@ -1,7 +1,6 @@
 ﻿using Common;
 using Domain.Entities;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -9,22 +8,20 @@ namespace Infrastructure.Data;
 
 public class ApplicationDbContext : DbContext
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly AuthenticationStateProvider _authStateProvider;
     private readonly IDateTimeService _dateTimeService;
 
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
-        IHttpContextAccessor httpContextAccessor,
+        AuthenticationStateProvider authStateProvider,
         IDateTimeService dateTimeService) : base(options)
     {
         ChangeTracker.LazyLoadingEnabled = false;
-        _httpContextAccessor = httpContextAccessor;
+        _authStateProvider = authStateProvider;
         _dateTimeService = dateTimeService;
     }
 
     public virtual DbSet<TravelPlan> TravelPlans { get; set; }
-    public virtual DbSet<Travel> Travels { get; set; }
-    public virtual DbSet<TodoItem> TodoItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -34,7 +31,7 @@ public class ApplicationDbContext : DbContext
         builder.Entity<TravelPlan>().HasQueryFilter(p => !p.IsDeleted);
     }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var insertedEntries = ChangeTracker.Entries()
                    .Where(x => x.State == EntityState.Added)
@@ -43,20 +40,33 @@ public class ApplicationDbContext : DbContext
         foreach (var insertedEntity in insertedEntries.OfType<BaseEntity>())
         {
             insertedEntity.Id = Guid.NewGuid();
+        }
+
+        foreach (var insertedEntity in insertedEntries.OfType<AuditableEntity>())
+        {
             insertedEntity.CreatedDate = _dateTimeService.Now;
-            insertedEntity.CreatedBy = _httpContextAccessor?.HttpContext?.User?.Identity?.Name ?? string.Empty;
+            insertedEntity.CreatedBy = await GetLoggedInUserEmailAsync();
         }
 
         var modifiedEntries = ChangeTracker.Entries()
                    .Where(x => x.State == EntityState.Modified)
                    .Select(x => x.Entity);
 
-        foreach (var modifiedEntry in modifiedEntries.OfType<BaseEntity>())
+        foreach (var modifiedEntry in modifiedEntries.OfType<AuditableEntity>())
         {
             modifiedEntry.UpdatedDate = _dateTimeService.Now;
-            modifiedEntry.UpdatedBy = _httpContextAccessor?.HttpContext?.User?.Identity?.Name ?? string.Empty;
+            modifiedEntry.UpdatedBy = await GetLoggedInUserEmailAsync();
         }
 
-        return base.SaveChangesAsync(cancellationToken);
+        return await base.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task<string> GetLoggedInUserEmailAsync()
+    {
+        var emailType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
+        var authState = await _authStateProvider.GetAuthenticationStateAsync();
+        var claims = authState?.User?.Claims;
+
+        return claims?.FirstOrDefault(c => c.Type == emailType)?.Value ?? "<Unknown>";
     }
 }

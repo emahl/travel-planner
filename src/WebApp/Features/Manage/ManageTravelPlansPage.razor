@@ -1,0 +1,42 @@
+﻿@page "/manage"
+
+<PageTitle>Travel Planner - Manage</PageTitle>
+
+<div class="d-flex flex-wrap mt-4" style="margin: 10px 0">
+    <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Success" OnClick="@((_) => CreateTravelPlan())">
+        Create new
+    </MudButton>
+    <MudDivider DividerType="DividerType.Middle" />
+    <MudSwitch @bind-Checked="@ShowCompleted" Color="Color.Success">
+        Show completed
+    </MudSwitch>
+</div>
+
+<MudTable Breakpoint="Breakpoint.None" Dense="true" Items="@FilteredTravelPlans" Hover="true" Loading="@Loading" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>
+            <MudTableSortLabel SortBy="new Func<TravelPlan, object>(x => x.Name)">
+                Name
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>Type</MudTh>
+        <MudTh>
+            <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<TravelPlan, object>(x => x.TravelTo?.DepartureDate ?? DateTime.MaxValue)">
+                Date
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>Created by</MudTh>
+        <MudTh>Updated by</MudTh>
+        <MudTh>Edit</MudTh>
+        <MudTh>Delete</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Type">@context.Type</MudTd>
+        <MudTd DataLabel="Date">@context.TravelDateSummary</MudTd>
+        <MudTd DataLabel="Created by"><p title="@context.CreatedDate">@context.CreatedBy</p></MudTd>
+        <MudTd DataLabel="Updated by"><p title="@context.UpdatedDate">@context.UpdatedBy</p></MudTd>
+        <MudTd DataLabel="Edit"><MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" OnClick="@((_) => UpdateTravelPlan(context))" /></MudTd>
+        <MudTd DataLabel="Delete"><MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" OnClick="@((_) => DeleteTravelPlan(context.Id, context.Name))" /></MudTd>
+    </RowTemplate>
+</MudTable>

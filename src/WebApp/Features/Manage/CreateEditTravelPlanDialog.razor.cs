@@ -1,12 +1,6 @@
-﻿using Application.Commands;
-using Domain.Entities;
-using MediatR;
-using Microsoft.AspNetCore.Components;
-using MudBlazor;
+﻿namespace WebApp.Features.Manage;
 
-namespace WebApp.Pages;
-
-public partial class CreateTravelPlanDialog
+public partial class CreateEditTravelPlanDialog
 {
     [Inject] public IMediator Mediator { get; set; } = default!;
     [Inject] public ISnackbar Snackbar { get; set; } = default!;
@@ -15,7 +9,13 @@ public partial class CreateTravelPlanDialog
 
     [Parameter] public TravelPlan TravelPlan { get; set; } = default!;
 
+    public bool IsSaveDisabled => string.IsNullOrEmpty(TravelPlan.Name);
+
     public string DialogTitle => TravelPlan.IsNew ? "Create new travel plan" : "Update travel plan";
+
+    public string TravelToPanelTitle => $"Travel to: {TravelPlan.TravelTo.ShortTitle}";
+
+    public string TravelHomePanelTitle => $"Travel home: {TravelPlan.TravelHome.ShortTitle}";
 
     private void Cancel()
     {

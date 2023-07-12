@@ -15,14 +15,10 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+        var connectionString = configuration.GetConnectionString("Database") ?? throw new InvalidOperationException("Connection string 'Database' not found.");
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-#if DEBUG
-            options.UseInMemoryDatabase(databaseName: "TravelPlanDb");
-#else
-            options.UseSqlServer(connectionString)
-#endif
+            options.UseSqlServer(connectionString);
         });
 
         services.AddDatabaseDeveloperPageExceptionFilter();

@@ -3,28 +3,23 @@
 <PageTitle>Travel Planner</PageTitle>
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
     <main>
-        <article class="content px-4" style="margin-top: 20px;">
-            <AuthorizeView>
-                <Authorized>
-                    @Body
-                </Authorized>
-                <NotAuthorized>
-                    <MudAlert Severity="Severity.Info" ContentAlignment="HorizontalAlignment.Center">
-                        <form method="post" action="login">
-                            <p style="display: inline-block; margin-right: 10px;">You need to log in to continue:</p>
-                            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">
-                                Log in
-                            </MudButton>
-                        </form>
-                    </MudAlert>
-                </NotAuthorized>
-            </AuthorizeView>
-        </article>
+        <NavMenu />
+         <AuthorizeView>
+            <Authorized>
+                <article class="content px-4" style="margin-top: 20px;">@Body</article>
+            </Authorized>
+            <NotAuthorized>
+                <MudAlert Severity="Severity.Info" ContentAlignment="HorizontalAlignment.Center">
+                    <form method="post" action="login">
+                        <p style="display: inline-block; margin-right: 10px;">You are not logged in</p>
+                        <MudButton ButtonType="ButtonType.Submit" StartIcon="@Icons.Material.Filled.Login" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">
+                            Log in
+                        </MudButton>
+                    </form>
+                </MudAlert>
+            </NotAuthorized>
+        </AuthorizeView>
     </main>
 </div>
 

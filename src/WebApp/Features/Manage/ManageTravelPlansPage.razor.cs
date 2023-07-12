@@ -1,22 +1,30 @@
-﻿using Application.Commands;
-using Application.Queries;
-using Domain.Entities;
-using MediatR;
-using Microsoft.AspNetCore.Components;
-using MudBlazor;
+﻿using WebApp.Features.Shared;
 
-namespace WebApp.Pages;
+namespace WebApp.Features.Manage;
 
-public partial class TravelPlans
+public partial class ManageTravelPlansPage
 {
     [Inject] public IMediator Mediator { get; set; } = default!;
     [Inject] public IDialogService DialogService { get; set; } = default!;
     [Inject] public ISnackbar Snackbar { get; set; } = default!;
 
-    private bool _loading = false;
     private IReadOnlyList<TravelPlan>? _travelPlans;
+    private bool _showCompleted;
+    
+    public bool Loading = false;
+    public IReadOnlyList<TravelPlan>? FilteredTravelPlans;
 
-    public TravelPlans() {}
+    public bool ShowCompleted
+    {
+        get => _showCompleted;
+        set
+        {
+            _showCompleted = value;
+            FilterTravelPlans();
+        }
+    }
+
+    public ManageTravelPlansPage() { }
 
     protected override async Task OnInitializedAsync()
     {
@@ -27,35 +35,40 @@ public partial class TravelPlans
     {
         try
         {
-            _loading = true;
+            Loading = true;
             var query = new GetAllTravelPlansQuery();
             _travelPlans = await Mediator.Send(query);
+            FilterTravelPlans();
         }
         finally
         {
-            _loading = false;
+            Loading = false;
         }
+    }
+
+    private void FilterTravelPlans()
+    {
+        FilteredTravelPlans = _travelPlans?
+            .Where(tp => _showCompleted || tp.Type != TravelPlanType.Completed)?
+            .ToList();
     }
 
     async Task CreateTravelPlan()
     {
-        await CreateOrUpdateTravelPlan(TravelPlan.Empty);
+        await CreateOrEditTravelPlan(TravelPlan.Empty);
     }
 
     async Task UpdateTravelPlan(TravelPlan travelPlan)
     {
-        await CreateOrUpdateTravelPlan(travelPlan);
+        await CreateOrEditTravelPlan(travelPlan);
     }
 
-    async Task CreateOrUpdateTravelPlan(TravelPlan travelPlan)
+    async Task CreateOrEditTravelPlan(TravelPlan travelPlan)
     {
-        var parameters = new DialogParameters { ["travelPlan"] = travelPlan };
-
-        var dialog = await DialogService.ShowAsync<CreateTravelPlanDialog>("Create Travel Plan", parameters);
-        var result = await dialog.Result;
-
+        var result = await CreateEditTravelPlanDialogUtils
+            .OpenDialogAsync(DialogService, travelPlan);
+        
         if (result.Canceled) return;
-
         await LoadDataAsync();
     }
 
@@ -65,7 +78,7 @@ public partial class TravelPlans
             "Delete",
             $"Are you sure you want to delete the travel plan '{travelPlanName}'?",
             yesText: "Yes", cancelText: "Cancel");
-        
+
         if (result == null) return;
 
         await Mediator.Send(new DeleteTravelPlanCommand(travelPlanId));

@@ -1,0 +1,64 @@
+﻿@page "/"
+@using WebApp.Features.Shared;
+@using WebApp.Features.Timeline
+
+<PageTitle>Travel planner</PageTitle>
+
+<MudHidden Breakpoint="Breakpoint.Xs">
+    <MudText GutterBottom="true" Typo="Typo.h3" Align="Align.Center">
+        Upcoming travel plans
+    </MudText>
+</MudHidden>
+<MudHidden Breakpoint="Breakpoint.SmAndUp">
+    <MudText GutterBottom="true" Typo="Typo.h5" Align="Align.Center">
+        Upcoming travel plans
+    </MudText>
+</MudHidden>
+
+@if (_loading)
+{
+    <MudProgressCircular Indeterminate="true" />
+}
+else
+{
+    <TravelPlanTimeline TravelPlans="_travelPlans" OnEditTravelPlan="@EditTravelPlan" />
+}
+
+@code {
+    [Inject] public IDialogService DialogService { get; set; } = default!;
+    [Inject] public IMediator Mediator { get; set; } = default!;
+
+    private bool _loading = false;
+    private IReadOnlyList<TravelPlan> _travelPlans = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDataAsync();
+    }
+
+    private async Task LoadDataAsync()
+    {
+        try
+        {
+            _loading = true;
+            var query = new GetAllTravelPlansQuery();
+            var travelPlans = await Mediator.Send(query);
+            _travelPlans = travelPlans.OrderBy(tp => tp.TravelTo.DepartureDate).ToList();
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    async Task EditTravelPlan(TravelPlan travelPlan)
+    {
+        if (travelPlan == null || travelPlan.IsNew) return;
+
+        var result = await CreateEditTravelPlanDialogUtils
+            .OpenDialogAsync(DialogService, travelPlan);
+
+        if (result.Canceled) return;
+        await LoadDataAsync();
+    }
+}

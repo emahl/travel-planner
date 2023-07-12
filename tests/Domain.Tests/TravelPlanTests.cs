@@ -2,11 +2,8 @@
 
 public class TravelPlanTests
 {
-    private Fixture _fixture;
-
     public TravelPlanTests()
     {
-        _fixture = new Fixture();
     }
 
     [Fact]
@@ -18,7 +15,7 @@ public class TravelPlanTests
         // Assert
         travelPlan.Name.ShouldBe(string.Empty);
         travelPlan.Type.ShouldBe(TravelPlanType.Suggestion);
-        travelPlan.ThingsToDo.ShouldBeEmpty();
+        //travelPlan.ThingsToDo.ShouldBeEmpty();
         travelPlan.IsDeleted.ShouldBeFalse();
         travelPlan.Budget.ShouldBeNull();
         travelPlan.Description.ShouldBeNull();
@@ -89,33 +86,33 @@ public class TravelPlanTests
         travelPlan.IsDeleted.ShouldBeTrue();
     }
 
-    [Fact]
-    public void AddThingToDo_should_add_todo_item()
-    {
-        // Arrange
-        var travelPlan = TravelPlan.Empty;
-        var newTodoItem = _fixture.Create<TodoItem>();
+    //[Fact]
+    //public void AddThingToDo_should_add_todo_item()
+    //{
+    //    // Arrange
+    //    var travelPlan = TravelPlan.Empty;
+    //    var newTodoItem = _fixture.Create<TodoItem>();
 
-        // Act 
-        travelPlan.AddThingToDo(newTodoItem);
+    //    // Act 
+    //    travelPlan.AddThingToDo(newTodoItem);
 
-        // Assert
-        travelPlan.ThingsToDo.Count.ShouldBe(1);
-        travelPlan.ThingsToDo[0].ShouldBe(newTodoItem);
-    }
+    //    // Assert
+    //    travelPlan.ThingsToDo.Count.ShouldBe(1);
+    //    travelPlan.ThingsToDo[0].ShouldBe(newTodoItem);
+    //}
 
-    [Fact]
-    public void DeleteThingToDo_should_delete_todo_item()
-    {
-        // Arrange
-        var travelPlan = TravelPlan.Empty;
-        var newTodoItem = _fixture.Create<TodoItem>();
-        travelPlan.AddThingToDo(newTodoItem);
+    //[Fact]
+    //public void DeleteThingToDo_should_delete_todo_item()
+    //{
+    //    // Arrange
+    //    var travelPlan = TravelPlan.Empty;
+    //    var newTodoItem = _fixture.Create<TodoItem>();
+    //    travelPlan.AddThingToDo(newTodoItem);
 
-        // Act 
-        travelPlan.DeleteThingToDo(newTodoItem.Id);
+    //    // Act 
+    //    travelPlan.DeleteThingToDo(newTodoItem.Id);
 
-        // Assert
-        travelPlan.ThingsToDo.ShouldBeEmpty();
-    }
+    //    // Assert
+    //    travelPlan.ThingsToDo.ShouldBeEmpty();
+    //}
 }

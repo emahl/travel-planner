@@ -1,0 +1,11 @@
+﻿<MudSelect @bind-Value="@Travel.Type" Label="Type">
+    @foreach (TravelType item in Enum.GetValues(typeof(TravelType)))
+    {
+        <MudSelectItem Value="@item">@item</MudSelectItem>
+    }
+</MudSelect>
+<MudTextField T="string" @bind-Value="Travel.DepartureLocation" Label="Departure location" />
+<MudDatePicker Culture="DateCultureInfo" Editable="true" @bind-Date="Travel.DepartureDate" Label="Departure date" />
+<MudTextField T="string" @bind-Value="Travel.ArrivalLocation" Label="Arrival location" />
+<MudDatePicker Culture="DateCultureInfo" Editable="true" @bind-Date="Travel.ArrivalDate" Label="Arrival date" />
+<MudTextField T="string" @bind-Value="Travel.Notes" Label="Notes" />
